@@ -1,8 +1,8 @@
 package ru.exemple.noteando.ui.detailArticle
 
-import ru.exemple.noteando.ui.BaseView
+import ru.exemple.noteando.ui.ArticleView
 
-class DetailArticleView: BaseView {
+class DetailArticleView: ArticleView {
 
     override fun showLoading() {
         TODO("Not yet implemented")

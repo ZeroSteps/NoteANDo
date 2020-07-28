@@ -1,8 +1,10 @@
 package ru.exemple.noteando.api
 
+import ru.exemple.noteando.article.Article
+
 interface Api {
 
-    fun requestArticles()
+    fun getArticles(): List<Article>
 
     fun requestDetailArticle(id: Int)
 

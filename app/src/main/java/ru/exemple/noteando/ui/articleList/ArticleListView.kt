@@ -1,14 +1,9 @@
 package ru.exemple.noteando.ui.articleList
 
-import ru.exemple.noteando.ui.BaseView
+import ru.exemple.noteando.article.Article
+import ru.exemple.noteando.ui.ArticleView
 
-class ArticleListView: BaseView {
+interface ArticleListView: ArticleView {
 
-    override fun showLoading() {
-        TODO("Not yet implemented")
-    }
-
-    override fun hideLoading() {
-        TODO("Not yet implemented")
-    }
+    fun bindData(articles: List<Article>)
 }
