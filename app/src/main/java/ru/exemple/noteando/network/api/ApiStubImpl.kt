@@ -14,6 +14,15 @@ class ApiStubImpl: Api {
         return articles
     }
 
+    override fun getMainArticles(): List<ArticleDto> {
+        val articles = ArrayList<ArticleDto>()
+        articles.add(ArticleDto(1, "what5", "sadasdasdasdsadasd123"))
+        articles.add(ArticleDto(2, "what6", "zxczxczxczxczxczxczxczx321"))
+        articles.add(ArticleDto(3, "what6", "zxczxczxczxczxczxczxczx456"))
+        articles.add(ArticleDto(4, "what7", "zxczxczxczxczxczxczxczx11113"))
+        return articles
+    }
+
     override fun requestDetailArticle(id: Int) {
         TODO("Not yet implemented")
     }

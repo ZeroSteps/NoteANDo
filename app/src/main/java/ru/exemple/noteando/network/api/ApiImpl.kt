@@ -9,6 +9,10 @@ class ApiImpl: Api {
         TODO("Not yet implemented")
     }
 
+    override fun getMainArticles(): List<ArticleDto> {
+        TODO("Not yet implemented")
+    }
+
     override fun requestDetailArticle(id: Int) {
         TODO("Not yet implemented")
     }

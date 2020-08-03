@@ -2,25 +2,23 @@ package ru.exemple.noteando.presenters.articleListPresenter
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.exemple.noteando.network.api.Api
 import ru.exemple.noteando.article.Article
+import ru.exemple.noteando.network.api.Api
 import ru.exemple.noteando.ui.articleList.ArticleListView
-import java.util.concurrent.TimeUnit
 
-class ArticleListPresenterImpl(private val service: Api) : ArticleListPresenter {
+class MainArticleListPresenterImpl(private val service: Api) : ArticleListPresenter {
 
-    private var articleListView: ArticleListView? = null
+    private var mainArticleListView: ArticleListView? = null
 
-    private val articles = ArrayList<Article>()
+    private val mainArticles = ArrayList<Article>()
     private val liveData = MutableLiveData<List<Article>>()
-
 
     override fun getLiveData(): MutableLiveData<List<Article>> {
         return liveData
     }
 
     override fun bindArticleListView() {
-        articleListView?.let {
+        mainArticleListView?.let {
             it.showLoading()
 //            TODO: handle IOE and NPE
             getArticles()
@@ -31,21 +29,21 @@ class ArticleListPresenterImpl(private val service: Api) : ArticleListPresenter 
         object : Thread() {
             override fun run() {
                 sleep(1000)
-                articles.addAll(ArticlesDtoConverter().convertArticlesDto(service.getArticles()))
-                liveData.postValue(articles)
+                mainArticles.addAll(ArticlesDtoConverter().convertArticlesDto(service.getMainArticles()))
+                liveData.postValue(mainArticles)
             }
         }.start()
     }
 
-    override fun attachView(articleListView: ArticleListView) {
-        this.articleListView = articleListView
+    override fun attachView(mainArticleListView: ArticleListView) {
+        this.mainArticleListView = mainArticleListView
     }
 
     override fun detachView() {
-        this.articleListView = null
+        mainArticleListView = null
     }
 
-    class ArticleListViewModel : ViewModel() {
-        val articleListViewModel: ArticleListPresenter? = null
+    class MainArticleListViewModel : ViewModel() {
+        val mainArticleListPresenter: ArticleListPresenter? = null
     }
 }

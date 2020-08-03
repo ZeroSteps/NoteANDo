@@ -13,12 +13,16 @@ import ru.exemple.noteando.R
 import ru.exemple.noteando.network.api.Api
 import ru.exemple.noteando.presenters.articleListPresenter.ArticleListPresenter
 import ru.exemple.noteando.presenters.articleListPresenter.ArticleListPresenterImpl
+import ru.exemple.noteando.presenters.articleListPresenter.MainArticleListPresenterImpl
 import ru.exemple.noteando.ui.detailArticle.DetailArticleFragment
 
-class ArticleListFragment : Fragment(), ArticleListViewImpl.OnAdapterItemClickListener {
+class ArticleListFragment : Fragment(), ArticleListViewImpl.OnAdapterItemClickListener,
+    MainArticleListViewImpl.OnMainAdapterItemClickListener {
 
     private lateinit var articleListPresenter: ArticleListPresenter
+    private lateinit var mainArticleListPresenter: ArticleListPresenter
     private lateinit var articleListView: ArticleListView
+    private lateinit var mainArticleListView: ArticleListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,19 +34,25 @@ class ArticleListFragment : Fragment(), ArticleListViewImpl.OnAdapterItemClickLi
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_article_list, container, false)
-        initView(view)
-        attachView(articleListView)
-        observePresenterLiveData()
-        bindView()
+        initViews(view)
+        attachArticleListView(articleListView)
+        attachMainArticleListView(mainArticleListView)
+        observePresentersLiveData()
         return view
     }
 
     override fun onDestroy() {
         super.onDestroy()
         articleListPresenter.detachView()
+        mainArticleListPresenter.detachView()
     }
 
     private fun initPresenter() {
+        initArticlePresenter()
+        initMainArticlePresenter()
+    }
+
+    private fun initArticlePresenter() {
         val viewModel = ViewModelProviders.of(this)
             .get(ArticleListPresenterImpl.ArticleListViewModel::class.java)
         viewModel.articleListViewModel?.let {
@@ -56,15 +66,45 @@ class ArticleListFragment : Fragment(), ArticleListViewImpl.OnAdapterItemClickLi
         }
     }
 
-    private fun initView(view: View) {
-        articleListView = ArticleListViewImpl(this, view)
+    private fun initMainArticlePresenter() {
+        val viewModel = ViewModelProviders.of(this)
+            .get(MainArticleListPresenterImpl.MainArticleListViewModel::class.java)
+        viewModel.mainArticleListPresenter?.let {
+            mainArticleListPresenter = it
+            return
+        }
+        val service: Api
+        activity?.let {
+            service = (it.application as App).getDependencyRoot().service
+            mainArticleListPresenter = MainArticleListPresenterImpl(service)
+        }
     }
 
-    private fun attachView(articleListView: ArticleListView) {
+    private fun initViews(view: View) {
+        mainArticleListView = MainArticleListViewImpl(
+            this,
+            view.findViewById(R.id.fragment_article_list__include_main_recycler)
+        )
+        articleListView = ArticleListViewImpl(
+            this,
+            view.findViewById(R.id.fragment_article_list__include_article_recycle)
+        )
+    }
+
+    private fun attachArticleListView(articleListView: ArticleListView) {
         articleListPresenter.attachView(articleListView)
     }
 
-    private fun observePresenterLiveData() {
+    private fun attachMainArticleListView(mainArticleListView: ArticleListView) {
+        mainArticleListPresenter.attachView(mainArticleListView)
+    }
+
+    private fun observePresentersLiveData() {
+        observeArticleListPresenterLiveData()
+        observeMainArticleListPresenterLiveData()
+    }
+
+    private fun observeArticleListPresenterLiveData() {
         articleListPresenter.getLiveData().observe(
             viewLifecycleOwner,
             Observer { articles ->
@@ -74,13 +114,34 @@ class ArticleListFragment : Fragment(), ArticleListViewImpl.OnAdapterItemClickLi
         articleListPresenter.bindArticleListView()
     }
 
-    private fun bindView() {
-        articleListPresenter.bindArticleListView()
+    private fun observeMainArticleListPresenterLiveData() {
+        mainArticleListPresenter.getLiveData().observe(
+            viewLifecycleOwner,
+            Observer { mainArticles ->
+                mainArticleListView.bindData(mainArticles)
+            }
+        )
+        mainArticleListPresenter.bindArticleListView()
+    }
+
+    override fun onMainAdapterItemClick() {
+        parentFragmentManager.beginTransaction()
+            .replace(
+                R.id.activity_main__container,
+                DetailArticleFragment(),
+                DETAIL_ARTICLE_FRAGMENT
+            )
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onAdapterItemClick() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.activity_main__container, DetailArticleFragment(), DETAIL_ARTICLE_FRAGMENT)
+            .replace(
+                R.id.activity_main__container,
+                DetailArticleFragment(),
+                DETAIL_ARTICLE_FRAGMENT
+            )
             .addToBackStack(null)
             .commit()
     }

@@ -7,6 +7,8 @@ interface Api {
 
     fun getArticles(): List<ArticleDto>
 
+    fun getMainArticles(): List<ArticleDto>
+
     fun requestDetailArticle(id: Int)
 
     fun postArticle(title: String, description: String)

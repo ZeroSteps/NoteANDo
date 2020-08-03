@@ -8,8 +8,12 @@ import ru.exemple.noteando.BASE_URL_API
 import ru.exemple.noteando.network.dto.ArticleDto
 
 interface RetrofitApi {
+
     @GET("articles")
     fun loadArticles(): Call<List<ArticleDto>>
+
+    @GET("main_articles")
+    fun loadMainArticles(): Call<List<ArticleDto>>
 
     companion object Factory {
         fun create(): RetrofitApi {
