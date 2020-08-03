@@ -6,15 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import ru.exemple.noteando.App
+import ru.exemple.noteando.DETAIL_ARTICLE_FRAGMENT
 import ru.exemple.noteando.R
-import ru.exemple.noteando.api.Api
+import ru.exemple.noteando.network.api.Api
 import ru.exemple.noteando.presenters.articleListPresenter.ArticleListPresenter
 import ru.exemple.noteando.presenters.articleListPresenter.ArticleListPresenterImpl
+import ru.exemple.noteando.ui.detailArticle.DetailArticleFragment
 
-class ArticleListFragment : Fragment() {
+class ArticleListFragment : Fragment(), ArticleListViewImpl.OnAdapterItemClickListener {
 
     private lateinit var articleListPresenter: ArticleListPresenter
     private lateinit var articleListView: ArticleListView
@@ -48,15 +49,15 @@ class ArticleListFragment : Fragment() {
             articleListPresenter = it
             return
         }
-        val api: Api
+        val service: Api
         activity?.let {
-            api = (it.application as App).getDependencyRoot().apiStubImpl
-            articleListPresenter = ArticleListPresenterImpl(api)
+            service = (it.application as App).getDependencyRoot().service
+            articleListPresenter = ArticleListPresenterImpl(service)
         }
     }
 
     private fun initView(view: View) {
-        articleListView = ArticleListViewImpl(view)
+        articleListView = ArticleListViewImpl(this, view)
     }
 
     private fun attachView(articleListView: ArticleListView) {
@@ -65,7 +66,7 @@ class ArticleListFragment : Fragment() {
 
     private fun observePresenterLiveData() {
         articleListPresenter.getLiveData().observe(
-            this,
+            viewLifecycleOwner,
             Observer { articles ->
                 articleListView.bindData(articles)
             }
@@ -75,5 +76,12 @@ class ArticleListFragment : Fragment() {
 
     private fun bindView() {
         articleListPresenter.bindArticleListView()
+    }
+
+    override fun onAdapterItemClick() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.activity_main__container, DetailArticleFragment(), DETAIL_ARTICLE_FRAGMENT)
+            .addToBackStack(null)
+            .commit()
     }
 }

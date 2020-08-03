@@ -2,11 +2,12 @@ package ru.exemple.noteando.presenters.articleListPresenter
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.exemple.noteando.api.Api
+import ru.exemple.noteando.network.api.Api
 import ru.exemple.noteando.article.Article
 import ru.exemple.noteando.ui.articleList.ArticleListView
+import java.util.concurrent.TimeUnit
 
-class ArticleListPresenterImpl(private val api: Api): ArticleListPresenter {
+class ArticleListPresenterImpl(private val service: Api) : ArticleListPresenter {
 
     private var articleListView: ArticleListView? = null
 
@@ -21,15 +22,20 @@ class ArticleListPresenterImpl(private val api: Api): ArticleListPresenter {
     override fun bindArticleListView() {
         articleListView?.let {
             it.showLoading()
+//            TODO: handle IO and NPE
             getArticles()
-            it.bindData(articles)
+//            it.bindData(articles)
         }
     }
 
-    private fun getArticles(): List<Article> {
-        this.articles.clear()
-        this.articles.addAll(api.getArticles())
-        return articles
+    private fun getArticles() {
+        object : Thread() {
+            override fun run() {
+                sleep(1000)
+                articles.addAll(ArticlesDtoConverter().convertArticlesDto(service.getArticles()))
+                liveData.postValue(articles)
+            }
+        }.start()
     }
 
     override fun attachView(articleListView: ArticleListView) {
@@ -40,7 +46,7 @@ class ArticleListPresenterImpl(private val api: Api): ArticleListPresenter {
         this.articleListView = null
     }
 
-    class ArticleListViewModel: ViewModel() {
+    class ArticleListViewModel : ViewModel() {
         val articleListViewModel: ArticleListPresenter? = null
     }
 }

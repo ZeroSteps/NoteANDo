@@ -1,10 +1,11 @@
-package ru.exemple.noteando.api
+package ru.exemple.noteando.network.api
 
 import ru.exemple.noteando.article.Article
+import ru.exemple.noteando.network.dto.ArticleDto
 
 interface Api {
 
-    fun getArticles(): List<Article>
+    fun getArticles(): List<ArticleDto>
 
     fun requestDetailArticle(id: Int)
 

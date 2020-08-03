@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.exemple.noteando.R
 import ru.exemple.noteando.article.Article
 
-class ArticleListAdapter : RecyclerView.Adapter<ArticleListAdapter.ViewHolder>() {
+class ArticleListAdapter(private val listener: OnAdapterItemClickListener) :
+    RecyclerView.Adapter<ArticleListAdapter.ViewHolder>() {
 
     private var articles = ArrayList<Article>()
 
@@ -21,6 +22,7 @@ class ArticleListAdapter : RecyclerView.Adapter<ArticleListAdapter.ViewHolder>()
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.tvTitle.text = articles[position].title
         holder.tvDescription.text = articles[position].description
+        holder.itemView.setOnClickListener { listener.onAdapterItemClick() }
     }
 
     override fun getItemCount(): Int {
@@ -36,5 +38,9 @@ class ArticleListAdapter : RecyclerView.Adapter<ArticleListAdapter.ViewHolder>()
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvTitle: TextView = view.findViewById(R.id.item_article__tvTitle)
         val tvDescription: TextView = view.findViewById(R.id.item_article__tvDescription)
+    }
+
+    interface OnAdapterItemClickListener {
+        fun onAdapterItemClick()
     }
 }
