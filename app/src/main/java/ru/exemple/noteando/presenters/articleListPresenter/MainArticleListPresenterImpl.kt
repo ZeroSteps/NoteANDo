@@ -35,8 +35,8 @@ class MainArticleListPresenterImpl(private val service: Api) : ArticleListPresen
         }.start()
     }
 
-    override fun attachView(mainArticleListView: ArticleListView) {
-        this.mainArticleListView = mainArticleListView
+    override fun attachView(articleListView: ArticleListView) {
+        this.mainArticleListView = articleListView
     }
 
     override fun detachView() {
@@ -44,6 +44,6 @@ class MainArticleListPresenterImpl(private val service: Api) : ArticleListPresen
     }
 
     class MainArticleListViewModel : ViewModel() {
-        val mainArticleListPresenter: ArticleListPresenter? = null
+        var mainArticleListPresenter: ArticleListPresenter? = null
     }
 }

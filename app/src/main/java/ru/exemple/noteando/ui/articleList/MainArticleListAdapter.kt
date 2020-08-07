@@ -21,7 +21,6 @@ class MainArticleListAdapter(private val listener: OnAdapterItemClickListener) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.tvTitle.text = mainArticles[position].title
-        holder.tvDescription.text = mainArticles[position].description
         holder.itemView.setOnClickListener { listener.onAdapterItemClick() }
     }
 
@@ -37,7 +36,6 @@ class MainArticleListAdapter(private val listener: OnAdapterItemClickListener) :
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvTitle: TextView = view.findViewById(R.id.item_article__tvTitle)
-        val tvDescription: TextView = view.findViewById(R.id.item_article__tvDescription)
     }
 
     interface OnAdapterItemClickListener {

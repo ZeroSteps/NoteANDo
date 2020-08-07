@@ -2,10 +2,12 @@ package ru.exemple.noteando.presenters.articleListPresenter
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+
 import ru.exemple.noteando.network.api.Api
 import ru.exemple.noteando.article.Article
 import ru.exemple.noteando.ui.articleList.ArticleListView
-import java.util.concurrent.TimeUnit
 
 class ArticleListPresenterImpl(private val service: Api) : ArticleListPresenter {
 
@@ -27,14 +29,28 @@ class ArticleListPresenterImpl(private val service: Api) : ArticleListPresenter 
         }
     }
 
+//    private fun getArticles2() {
+//        object : Thread() {
+//            override fun run() {
+//                sleep(1000)
+//                articles.addAll(ArticlesDtoConverter().convertArticlesDto(service.getArticles()))
+//                liveData.postValue(articles)
+//            }
+//        }.start()
+//    }
+
     private fun getArticles() {
-        object : Thread() {
-            override fun run() {
-                sleep(1000)
-                articles.addAll(ArticlesDtoConverter().convertArticlesDto(service.getArticles()))
+        val dispose =
+        service.getArticles()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe ({ articlesDto ->
+                articles.addAll(ArticlesDtoConverter().convertArticlesDto(articlesDto))
                 liveData.postValue(articles)
-            }
-        }.start()
+            },
+            {
+
+            })
     }
 
     override fun attachView(articleListView: ArticleListView) {
@@ -46,6 +62,6 @@ class ArticleListPresenterImpl(private val service: Api) : ArticleListPresenter 
     }
 
     class ArticleListViewModel : ViewModel() {
-        val articleListViewModel: ArticleListPresenter? = null
+        var articleListViewModel: ArticleListPresenter? = null
     }
 }

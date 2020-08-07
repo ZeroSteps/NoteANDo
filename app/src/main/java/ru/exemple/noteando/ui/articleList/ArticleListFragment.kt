@@ -1,14 +1,16 @@
 package ru.exemple.noteando.ui.articleList
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import ru.exemple.noteando.App
 import ru.exemple.noteando.DETAIL_ARTICLE_FRAGMENT
+import ru.exemple.noteando.MY_LOG_TAG
 import ru.exemple.noteando.R
 import ru.exemple.noteando.network.api.Api
 import ru.exemple.noteando.presenters.articleListPresenter.ArticleListPresenter
@@ -43,6 +45,7 @@ class ArticleListFragment : Fragment(), ArticleListViewImpl.OnAdapterItemClickLi
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.d(MY_LOG_TAG, "onDestroy")
         articleListPresenter.detachView()
         mainArticleListPresenter.detachView()
     }
@@ -53,7 +56,7 @@ class ArticleListFragment : Fragment(), ArticleListViewImpl.OnAdapterItemClickLi
     }
 
     private fun initArticlePresenter() {
-        val viewModel = ViewModelProviders.of(this)
+        val viewModel = ViewModelProvider(this)
             .get(ArticleListPresenterImpl.ArticleListViewModel::class.java)
         viewModel.articleListViewModel?.let {
             articleListPresenter = it
@@ -63,11 +66,12 @@ class ArticleListFragment : Fragment(), ArticleListViewImpl.OnAdapterItemClickLi
         activity?.let {
             service = (it.application as App).getDependencyRoot().service
             articleListPresenter = ArticleListPresenterImpl(service)
+            viewModel.articleListViewModel = articleListPresenter
         }
     }
 
     private fun initMainArticlePresenter() {
-        val viewModel = ViewModelProviders.of(this)
+        val viewModel = ViewModelProvider(this)
             .get(MainArticleListPresenterImpl.MainArticleListViewModel::class.java)
         viewModel.mainArticleListPresenter?.let {
             mainArticleListPresenter = it
@@ -77,6 +81,7 @@ class ArticleListFragment : Fragment(), ArticleListViewImpl.OnAdapterItemClickLi
         activity?.let {
             service = (it.application as App).getDependencyRoot().service
             mainArticleListPresenter = MainArticleListPresenterImpl(service)
+            viewModel.mainArticleListPresenter = mainArticleListPresenter
         }
     }
 

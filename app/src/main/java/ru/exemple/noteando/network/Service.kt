@@ -1,15 +1,18 @@
 package ru.exemple.noteando.network
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.Retrofit
+import ru.exemple.noteando.article.Article
 import ru.exemple.noteando.network.api.Api
 import ru.exemple.noteando.network.api.RetrofitApi
 import ru.exemple.noteando.network.dto.ArticleDto
 
 class Service(private val retrofitApi: RetrofitApi) : Api {
 
-    override fun getArticles(): List<ArticleDto> {
-        val call = retrofitApi.loadArticles()
-        return call.execute().body()!!
+    override fun getArticles(): Single<List<ArticleDto>> {
+        retrofitApi.loadArticles()
+        return retrofitApi.loadArticles()
     }
 
     override fun getMainArticles(): List<ArticleDto> {
