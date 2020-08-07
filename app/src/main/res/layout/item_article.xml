@@ -1,24 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_margin="4dp"
+    android:elevation="2dp"
+    app:cardCornerRadius="4dp">
 
-    <TextView
-        android:id="@+id/item_article__tvTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+    <FrameLayout
+        android:layout_width="344dp"
+        android:layout_height="108dp">
 
-    <TextView
-        android:id="@+id/item_article__tvDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/item_article__tvTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <RelativeLayout
+            android:layout_width="344dp"
+            android:layout_height="108dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/item_article__tvCategory"
+                android:layout_width="match_parent"
+                android:layout_height="19dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="131dp"
+                android:layout_marginRight="131dp"
+                android:text="Programming"
+                android:textColor="@color/description_category_article_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/item_article__tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_below="@+id/item_article__tvCategory"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="131dp"
+                android:layout_marginRight="131dp"
+                android:text="Linear Layout"
+                android:textColor="@color/title_article_color"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/item_article__tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@+id/item_article__tvTitle"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="92dp"
+                android:layout_marginRight="92dp"
+                android:text="$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ssadasda"
+                android:textColor="@color/description_category_article_color"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/item_article__ivArticleBackground"
+            android:layout_width="143dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_vector_bg_article" />
+    </FrameLayout>
+</androidx.cardview.widget.CardView>

@@ -8,10 +8,12 @@ import ru.exemple.noteando.R
 import ru.exemple.noteando.article.Article
 import ru.exemple.noteando.ui.baseView.BaseView
 
-class ArticleListViewImpl(private val listener: OnAdapterItemClickListener, rootView: View) : BaseView(rootView), ArticleListView,
-    ArticleListAdapter.OnAdapterItemClickListener {
+class MainArticleListViewImpl(
+    private val listener: OnMainAdapterItemClickListener,
+    rootView: View
+) : BaseView(rootView), ArticleListView, MainArticleListAdapter.OnAdapterItemClickListener {
 
-    private lateinit var adapter: ArticleListAdapter
+    private lateinit var adapter: MainArticleListAdapter
 
     private lateinit var pbLoading: ProgressBar
 
@@ -20,9 +22,9 @@ class ArticleListViewImpl(private val listener: OnAdapterItemClickListener, root
     }
 
     private fun init() {
-        adapter = ArticleListAdapter(this)
+        adapter = MainArticleListAdapter(this)
         val linearLayoutManager =
-            LinearLayoutManager(getRootView().context, RecyclerView.VERTICAL, false)
+            LinearLayoutManager(getRootView().context, RecyclerView.HORIZONTAL, false)
         val recyclerView: RecyclerView =
             getRootView().findViewById(R.id.view_recycler__rvArticles)
         pbLoading = getRootView().findViewById(R.id.view_recycler__pbLoading)
@@ -44,10 +46,10 @@ class ArticleListViewImpl(private val listener: OnAdapterItemClickListener, root
     }
 
     override fun onAdapterItemClick() {
-        listener.onAdapterItemClick()
+        listener.onMainAdapterItemClick()
     }
 
-    interface OnAdapterItemClickListener {
-        fun onAdapterItemClick()
+    interface OnMainAdapterItemClickListener {
+        fun onMainAdapterItemClick()
     }
 }
