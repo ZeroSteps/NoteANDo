@@ -1,16 +1,12 @@
 package ru.exemple.noteando.ui.articleList
 
-import android.graphics.Color
-import android.graphics.Outline
-import android.graphics.Path
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewOutlineProvider
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import ru.exemple.noteando.R
 import ru.exemple.noteando.article.Article
@@ -26,12 +22,8 @@ class ArticleListAdapter(private val listener: OnAdapterItemClickListener) :
         return ViewHolder(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.tvTitle.text = articles[position].title
-        holder.tvDescription.text = articles[position].description
-        setIvArticleBackgroundOutline(holder.ivArticleBackground)
-        holder.itemView.setOnClickListener { listener.onAdapterItemClick() }
+        holder.bind(articles, listener)
     }
 
     override fun getItemCount(): Int {
@@ -45,14 +37,29 @@ class ArticleListAdapter(private val listener: OnAdapterItemClickListener) :
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvTitle: TextView = view.findViewById(R.id.item_article__tvTitle)
-        val tvDescription: TextView = view.findViewById(R.id.item_article__tvDescription)
-        val ivArticleBackground: ImageView =
-            view.findViewById(R.id.item_article__ivArticleBackground)
-    }
+        private val tvTitle: TextView = view.findViewById(R.id.item_article__tvTitle)
+        private val tvDescription: TextView = view.findViewById(R.id.item_article__tvDescription)
+        private val llCategory: LinearLayout =
+            view.findViewById(R.id.item_article__llCategories)
+//        private val ivArticleBackground: ImageView =
+//            view.findViewById(R.id.item_article__ivArticleBackground)
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun setIvArticleBackgroundOutline(view: ImageView) {
+        fun bind(articles: List<Article>, listener: OnAdapterItemClickListener) {
+            tvTitle.text = articles[adapterPosition].title
+            tvDescription.text = articles[adapterPosition].description
+//            setIvArticleBackgroundOutline(ivArticleBackground)
+            for (category in articles[adapterPosition].array) {
+                llCategory.addView(
+                    CustomLayout(
+                        itemView.context,
+                        category
+                    )
+                )
+            }
+            itemView.setOnClickListener { listener.onAdapterItemClick() }
+        }
+
+        private fun setIvArticleBackgroundOutline(view: ImageView) {
 //        TODO: change API version to Lollipop
 //        val outlineProvider = object : ViewOutlineProvider() {
 //            override fun getOutline(view: View?, outline: Outline?) {
@@ -90,6 +97,7 @@ class ArticleListAdapter(private val listener: OnAdapterItemClickListener) :
 //            }
 //            image.clipToOutline = true
 //        }
+        }
     }
 
     interface OnAdapterItemClickListener {
