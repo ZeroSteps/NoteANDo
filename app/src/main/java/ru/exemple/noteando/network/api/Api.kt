@@ -9,7 +9,7 @@ interface Api {
 
     fun getArticles(): Single<List<ArticleDto>>
 
-    fun getMainArticles(): List<ArticleDto>
+    fun getMainArticles(): Single<List<ArticleDto>>
 
     fun requestDetailArticle(id: Int)
 

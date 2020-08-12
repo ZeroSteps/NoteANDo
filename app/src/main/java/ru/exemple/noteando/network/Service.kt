@@ -11,13 +11,11 @@ import ru.exemple.noteando.network.dto.ArticleDto
 class Service(private val retrofitApi: RetrofitApi) : Api {
 
     override fun getArticles(): Single<List<ArticleDto>> {
-        retrofitApi.loadArticles()
         return retrofitApi.loadArticles()
     }
 
-    override fun getMainArticles(): List<ArticleDto> {
-        val call = retrofitApi.loadMainArticles()
-        return call.execute().body()!!
+    override fun getMainArticles(): Single<List<ArticleDto>> {
+        return retrofitApi.loadMainArticles()
     }
 
     override fun requestDetailArticle(id: Int) {

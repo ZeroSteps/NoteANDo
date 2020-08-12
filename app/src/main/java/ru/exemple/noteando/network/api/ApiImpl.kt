@@ -11,7 +11,7 @@ class ApiImpl: Api {
         TODO("Not yet implemented")
     }
 
-    override fun getMainArticles(): List<ArticleDto> {
+    override fun getMainArticles(): Single<List<ArticleDto>> {
         TODO("Not yet implemented")
     }
 

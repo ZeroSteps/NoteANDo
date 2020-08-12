@@ -1,12 +1,13 @@
 package ru.exemple.noteando.ui.articleList
 
+import android.os.Build
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.HorizontalScrollView
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import ru.exemple.noteando.R
 import ru.exemple.noteando.article.Article
@@ -22,6 +23,7 @@ class ArticleListAdapter(private val listener: OnAdapterItemClickListener) :
         return ViewHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(articles, listener)
     }
@@ -41,62 +43,43 @@ class ArticleListAdapter(private val listener: OnAdapterItemClickListener) :
         private val tvDescription: TextView = view.findViewById(R.id.item_article__tvDescription)
         private val llCategory: LinearLayout =
             view.findViewById(R.id.item_article__llCategories)
-//        private val ivArticleBackground: ImageView =
-//            view.findViewById(R.id.item_article__ivArticleBackground)
 
         fun bind(articles: List<Article>, listener: OnAdapterItemClickListener) {
             tvTitle.text = articles[adapterPosition].title
             tvDescription.text = articles[adapterPosition].description
-//            setIvArticleBackgroundOutline(ivArticleBackground)
-            for (category in articles[adapterPosition].array) {
+            addCustomViewsInLayout(articles)
+            itemView.setOnClickListener { listener.onAdapterItemClick() }
+        }
+
+        private fun addCustomViewsInLayout(articles: List<Article>) {
+            val leftMarginParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            val pixels = convertDpToPixel(8f)
+            leftMarginParams.leftMargin = pixels.toInt()
+            for (x in articles[adapterPosition].categories.indices) {
+                val category = articles[adapterPosition].categories[x]
+                if (x == 0) {
+                    llCategory.addView(
+                        CustomLayout(
+                            itemView.context,
+                            category
+                        )
+                    )
+                    continue
+                }
                 llCategory.addView(
                     CustomLayout(
                         itemView.context,
                         category
-                    )
+                    ),
+                    leftMarginParams
                 )
             }
-            itemView.setOnClickListener { listener.onAdapterItemClick() }
         }
 
-        private fun setIvArticleBackgroundOutline(view: ImageView) {
-//        TODO: change API version to Lollipop
-//        val outlineProvider = object : ViewOutlineProvider() {
-//            override fun getOutline(view: View?, outline: Outline?) {
-//                val path = Path()
-//                path.moveTo(0f, 0f)
-//                path.rLineTo(44f, 108f)
-//                path.rLineTo(143f, 108f)
-//                path.rLineTo(143f, 0f)
-//                path.rLineTo(0f, 0f)
-//
-//                outline?.setConvexPath(path)
-//            }
-//        }
-//        view.outlineProvider = outlineProvider
-//        view.clipToOutline = true
-
-
-//        val image = view
-//        val curveRadius = 20F
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//
-//            image.outlineProvider = object : ViewOutlineProvider() {
-//
-//                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-//                override fun getOutline(view: View?, outline: Outline?) {
-//                    outline?.setRoundRect(
-//                        0,
-//                        0,
-//                        view!!.width,
-//                        (view.height + curveRadius).toInt(),
-//                        curveRadius
-//                    )
-//                }
-//            }
-//            image.clipToOutline = true
-//        }
+        private fun convertDpToPixel(dp: Float): Float {
+            return dp * (itemView.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
         }
     }
 

@@ -16,7 +16,7 @@ interface RetrofitApi {
     fun loadArticles(): Single<List<ArticleDto>>
 
     @GET("main_articles")
-    fun loadMainArticles(): Call<List<ArticleDto>>
+    fun loadMainArticles(): Single<List<ArticleDto>>
 
     companion object Factory {
         fun create(): RetrofitApi {

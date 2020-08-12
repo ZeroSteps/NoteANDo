@@ -20,7 +20,6 @@ class CustomLayout(context: Context, category: String) : LinearLayout(context) {
         val tvCategory: TextView = findViewById(R.id.custom_layout_category__tvCategory)
         ivCategory.setImageDrawable(getDrawable(context, R.drawable.ic_baseline_computer_24))
         tvCategory.text = category
-
     }
 
     private fun setLayoutRoundRectCorners(view: View) {
@@ -29,8 +28,6 @@ class CustomLayout(context: Context, category: String) : LinearLayout(context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             view.outlineProvider = object : ViewOutlineProvider() {
-
-                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
                 override fun getOutline(view: View?, outline: Outline?) {
                     outline?.setRoundRect(
                         0,
@@ -43,6 +40,5 @@ class CustomLayout(context: Context, category: String) : LinearLayout(context) {
             }
             view.clipToOutline = true
         }
-
     }
 }

@@ -17,14 +17,14 @@ class ApiStubImpl : Api {
         return Single.just(articles)
     }
 
-    override fun getMainArticles(): List<ArticleDto> {
+    override fun getMainArticles(): Single<List<ArticleDto>> {
         val articles = ArrayList<ArticleDto>()
         articles.add(ArticleDto(1, "CSS", "sadasdasdasdsadasd123"))
         articles.add(ArticleDto(2, "NoteJS", "zxczxczxczxczxczxczxczx321"))
         articles.add(ArticleDto(3, "Flutter", "zxczxczxczxczxczxczxczx456"))
         articles.add(ArticleDto(4, "Android", "zxczxczxczxczxczxczxczx11113"))
         articles.add(ArticleDto(5, "IOS", "zxczxczxczxczxczxczxczx11113"))
-        return articles
+        return Single.just(articles)
     }
 
     override fun requestDetailArticle(id: Int) {

@@ -1,9 +1,14 @@
 package ru.exemple.noteando.presenters.articleListPresenter
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import ru.exemple.noteando.article.Article
 import ru.exemple.noteando.network.api.Api
+import ru.exemple.noteando.presenters.articleListPresenter.util.ArticlesDtoConverter
 import ru.exemple.noteando.ui.articleList.ArticleListView
 
 class MainArticleListPresenterImpl(private val service: Api) : ArticleListPresenter {
@@ -26,13 +31,22 @@ class MainArticleListPresenterImpl(private val service: Api) : ArticleListPresen
     }
 
     private fun getArticles() {
-        object : Thread() {
-            override fun run() {
-                sleep(1000)
-                mainArticles.addAll(ArticlesDtoConverter().convertArticlesDto(service.getMainArticles()))
-                liveData.postValue(mainArticles)
-            }
-        }.start()
+        val dispose =
+            service.getMainArticles()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ mainArticlesDto ->
+                    mainArticles.addAll(
+                        ArticlesDtoConverter().convertArticlesDto(
+                            mainArticlesDto
+                        )
+                    )
+                    liveData.postValue(mainArticles)
+                },
+                    {
+
+                    }
+                )
     }
 
     override fun attachView(articleListView: ArticleListView) {
